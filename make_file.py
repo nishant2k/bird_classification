@@ -107,4 +107,10 @@ for i in range(1,len(files)):
       path4 = path3+"/"+"finally.csv"
       e1=d22.to_csv(path4)  #exporting the final csv into their respective folders
     else:
-      pass
+        c11 = df.groupby("Notes")
+        d22 = c11.get_group(b[j])
+        e1 = d22.to_csv("m.csv", header=False)
+        with open('m.csv', 'r') as f1, open(path1+"/"+str(b[j])+"/finally.csv", 'a+') as f2:
+            f2.write(f1.read())
+        
+#     
