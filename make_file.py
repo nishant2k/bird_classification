@@ -113,4 +113,4 @@ for i in range(1,len(files)):
         with open('m.csv', 'r') as f1, open(path1+"/"+str(b[j])+"/finally.csv", 'a+') as f2:
             f2.write(f1.read())
         
-#     
+#winter2 on google drive man     
