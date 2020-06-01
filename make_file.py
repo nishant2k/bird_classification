@@ -85,7 +85,7 @@ for i in range(1,len(files)):
       b1.append(b[j])  # Appending the b1 list(containi birds of first file) if the bird name is not in the b1 list
       path3 = path1+"/"+str(b[j]) # making path for creating directories of the new bird
       try:
-          os.mkdir(path3,access_rights)    #making the directory of particular bird
+          os.mkdir(path3,access_rights)    #making the directory of particular bird#
       except FileExistsError:
           print("Directory already exists")
           continue
