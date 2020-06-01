@@ -1,10 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu May 21 19:14:24 2020
-
-@author: nishant
-"""
+"""Importing the necessery libraries"""
 import os
 import numpy as np
 import pandas as pd
@@ -18,6 +12,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score 
 from sklearn.metrics import classification_report 
 
+"""Function for reaing the images"""
 def read_image(path, size):
     image = cv2.imread(path, cv2.IMREAD_COLOR)
     image = cv2.resize(image, (size, size))
@@ -25,58 +20,36 @@ def read_image(path, size):
     image = image.astype(np.float32)
     return image
 
-path = "/home/nishant/Documents/bird_f"
-train_path = os.path.join(path, "train/*")
-test_path = os.path.join(path, "test/*")
-labels_path = os.path.join(path, "labels.csv")
+path = "/content/bird_f" # path of bird directory conatining test and train datasets
+#train_path = os.path.join(path, "train/*")
+test_path = os.path.join(path, "test/*") # test directory path
+labels_path2 = os.path.join(path, "test_labels.csv") #train labels path that conatins the unique id of bird with respective breed of the bird
 
 
-labels_df = pd.read_csv(labels_path)
-breed = labels_df["breed"].unique()
-print("Number of Breed: ", len(breed))
+labels_df2 = pd.read_csv(labels_path2)
+##Save the breed2id and id2breed dictionary from model.py
+model = tf.keras.models.load_model("model3.h5")
 
-breed2id = {name: i for i, name in enumerate(breed)}
-id2breed = {i: name for i, name in enumerate(breed)}
 
-model = tf.keras.models.load_model("model.h5")
+l1 = labels_df2["id"] # list of the unique id 
+l2 = labels_df2["breed"] # list of corresponding breed of bird
 
-#for i, path in tqdm(enumerate(valid_x[:10])):
-l1 = labels_df["id"][6009:]
-l2 = labels_df["breed"][6009:]
+zip1 = list(zip(l1, l2)) #creating zip of id with breed of bird
 
-zip1 = list(zip(l1, l2))
-
-random.shuffle((zip1))
+random.shuffle((zip1)) # randomly shuffling the zip
 
 res1 = list(zip(*zip1))
 
-l1 = list(res1[0])
-l2 = list(res1[1]) #actual
+l1 = list(res1[0]) #extracting the shuffled id's
+l2 = list(res1[1]) #extracting the respective breed of l1 list
 
-predicted=[]
+predicted=[] # creating list for appending the predicetd bird
 for i in range(len(l1)):
-    image = read_image(path + "/" + "test/" + str(l1[i]) + ".png", 224)
+    image = read_image(path + "/" + "test/" + str(l1[i]) + ".png", 224) #reading the images
     image = np.expand_dims(image, axis=0)
-    pred = model.predict(image)[0]
+    pred = model.predict(image)[0] #predicting the bird index form our model
     label_idx = np.argmax(pred)
-    breed_name = id2breed[label_idx]
+    breed_name = id2breed[label_idx] # converting the index to breed with id2breed dictionary
     predicted.append(breed_name)
     
-print(accuracy_score(l2 , predicted))
-    
-
-
-#ori_breed = id2breed[valid_y[i]]
-#ori_image = cv2.imread(path, cv2.IMREAD_COLOR)
-#image = read_image(path + "/" + "test/INSECT_3_314.png", 224)
-#image = np.expand_dims(image, axis=0)
-#pred = model.predict(image)[0]
-#label_idx = np.argmax(pred)
-#breed_name = id2breed[label_idx]
-#predicted.append(breed_name)
-#
-#
-#ori_image = cv2.putText(ori_image, breed_name, (0, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
-#ori_image = cv2.putText(ori_image, ori_breed, (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
-
- #cv2.imshow(f"/home/nishant/Downloads/a.png", ori_image)
+print(accuracy_score(l2,predicted))#calculating the accuracy of our model
