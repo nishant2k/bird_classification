@@ -32,29 +32,13 @@ files = ["1", "P03929TEA1_20170505_113500.Table.1.selections", "P03929TEA1_20170
          "P03939FOR2_20170512_130300.Table.1.selections", "P03940TEA2_20170505_061500.Table.1.selections", "P03940TEA2_20170505_133500.Table.1.selections", "P03940TEA2_20170505_193500.Table.1.selections" 
          ]
 ##extraxt filed as csv
-#path = "C:/Users/91811/Downloads/Selections-20200514T132501Z-001/Selections"
-#for i in range(len(files)):
-#  a=pd.read_csv(path+"/"+files[i]+".txt", sep="\t")
-#  print(a["Begin Time (s)"])
-##converting txt files to csv files
-#
-#  a.to_csv("/content/csv_file"+"/"+files[i]+".csv")
-#  #b=pd.read_csv("/content/csv_file/a.csv")
-# # b["Diff"] = b["End Time (s)"] - b["Begin Time (s)"]
-#
-##b1 = set(a["Notes"]) # #created a set of all species,no repetition
-#
-##m=list(b1)
-##k=b1.add("Ikkkkk")
-##n=list(b1)
-##print(len(n))
-##l="kkkkk"
-##if l not in n:
-#  #n.append(l)
-### pass
-#
-##print(len(n))
-#print(len(k))
+for i in range(len(files)):
+  a=pd.read_csv(path+"/"+files[i]+".txt", sep="\t")
+  #print(a["Begin Time (s)"])
+##converting txt files to csv files and saving them
+  a.to_csv("/content/csv_file"+"/"+files[i]+".csv")
+  
+#Reading any one file
 a1 = pd.read_csv("C:/Users/91811/Downloads/Selections-20200514T132501Z-001/Selections2/1.csv")
 a1["Diff"] = a1["End Time (s)"] - a1["Begin Time (s)"] # create new column for differerbce
 
@@ -72,7 +56,7 @@ except FileExistsError:
     print("Directory already exists")
 
 
-#making directories
+#making directories with bird names for a file
 for i in range(len(b1)):
     path2=path1+"/"+str(b1[i])
     try:
@@ -86,31 +70,33 @@ c=a1.groupby("Notes")
 for i in range(len(b1)):
     d=c.get_group(b1[i])
     path2=path1+"/"+str(b1[i])+"/finally.csv"
-    e=d.to_csv(path2)  #exporting the final csv into their respective folders
+    e=d.to_csv(path2)  #exporting the final csv into their respective folders. The csv will be conatining the dataset of each bird 
+                          #of the first file
 
+         
+         
+ ## Doing same for the rest of the files
 for i in range(1,len(files)):
   df = pd.read_csv("C:/Users/91811/Downloads/Selections-20200514T132501Z-001/Selections2"+"/"+files[i]+".csv")
   df["Diff"] = df["End Time (s)"] - df["Begin Time (s)"]
-  b = df["Notes"]
+  b = df["Notes"]  #Creating list of birds for a paticular file of the loop
   for j in range(len(b)):
     if str(b[j]) not in b1:
-      b1.append(b[j])
-      path3 = path1+"/"+str(b[j])
+      b1.append(b[j])  # Appending the b1 list(containi birds of first file) if the bird name is not in the b1 list
+      path3 = path1+"/"+str(b[j]) # making path for creating directories of the new bird
       try:
-          os.mkdir(path3,access_rights)    
+          os.mkdir(path3,access_rights)    #making the directory of particular bird
       except FileExistsError:
           print("Directory already exists")
           continue
-      c11 = df.groupby("Notes")
-      #for k in range(len(b1)):
+      c11 = df.groupby("Notes") 
       d22 = c11.get_group(b[j])
       path4 = path3+"/"+"finally.csv"
-      e1=d22.to_csv(path4)  #exporting the final csv into their respective folders
+      e1=d22.to_csv(path4)  #exporting the final csv of the new bird to their respective folder
     else:
-        c11 = df.groupby("Notes")
-        d22 = c11.get_group(b[j])
-        e1 = d22.to_csv("m.csv", header=False)
-        with open('m.csv', 'r') as f1, open(path1+"/"+str(b[j])+"/finally.csv", 'a+') as f2:
-            f2.write(f1.read())
+      c11 = df.groupby("Notes")
+      d22 = c11.get_group(b[j])
+      e1 = d22.to_csv("m.csv", header=False)
+      with open('m.csv', 'r') as f1, open(path1+"/"+str(b[j])+"/finally.csv", 'a+') as f2:
+          f2.write(f1.read()) 
         
-#winter2 on google drive man     
