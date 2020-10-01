@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ Manually solitting the dataset into train_test because our data contains only one file for few birds"""
-#importing necessery libraries
+#Importing necessery libraries
 import numpy as np
 import os
 import cv2
@@ -14,7 +14,7 @@ for i in range(len(names)):
     bird_names = os.listdir(path2) # files of each bird 
         
     if (len(bird_names) >= 5): # Manually selecting the birds with more then 4 images 
-         choice = np.random.choice(bird_names, int(len(bird_names)//1.25) , replace=False) # splitting the data randomly into 80:20 ratio
+         choice = np.random.choice(bird_names, int(len(bird_names)//1.25) , replace=False) # Splitting the data randomly into 80:20 ratio
          for l in range(len(choice)):
          image = cv2.imread(path2 + "/" + choice[l]  )
          cv2.imwrite("E:/bird/train/" + str(names[i]) + "_" + str(choice[l]) , image) # Writing the image to train folder
