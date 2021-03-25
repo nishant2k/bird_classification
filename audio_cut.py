@@ -1,4 +1,4 @@
-## In this script we will be doing the audio cutting part of our model
+# In this script we will be doing the audio cutting part of our model
 #importing necessery libraries
 import pandas as pd
 import uuid
